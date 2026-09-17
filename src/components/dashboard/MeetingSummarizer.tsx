@@ -32,8 +32,8 @@ function parse(transcript: string): Result {
 
   for (const raw of lines) {
     const speakerMatch = raw.match(/^([A-Z][\w.'-]{1,20})\s*:\s*(.*)$/);
-    const speaker = speakerMatch ? speakerMatch[1] : "Unassigned";
-    const text = (speakerMatch ? speakerMatch[2] : raw).replace(/^(uh|um|ok|so|yeah)[,\s]+/i, "");
+    const speaker = speakerMatch?.[1] ?? "Unassigned";
+    const text = (speakerMatch?.[2] ?? raw).replace(/^(uh|um|ok|so|yeah)[,\s]+/i, "");
     if (!text) continue;
     const clean = text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -43,7 +43,7 @@ function parse(transcript: string): Result {
 
     const ownerMatch = text.match(/\b([A-Z][a-z]{2,15})\s*,?\s*(?:can|could|will|should|please)\b/);
     if (/\bI'?ll\b|\bI will\b|\bwill (own|handle|fix|update|send|prepare)\b|\bcan you\b|\bneed\b/i.test(text)) {
-      const owner = ownerMatch ? ownerMatch[1] : speaker;
+      const owner = ownerMatch?.[1] ?? speaker;
       actions.push({ owner, task: clean });
     }
 
